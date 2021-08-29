@@ -2,8 +2,10 @@
 // -
 const express = require("express");
 const mongoose = require("mongoose");
-const productRoutes = require("./routes/productRoutes");
+const saucesRoutes = require("./routes/saucesRoutes");
 const userRoutes = require("./routes/userRoutes");
+// allows to access the file system paths
+const path = require("path");
 
 mongoose
   .connect(
@@ -36,8 +38,12 @@ app.use((req, res, next) => {
 // for parsing application/json
 app.use(express.json());
 
-// for this route => use *name*Routes
-app.use("/api/product", productRoutes);
+// routing manager for 'images' folder
+// middleware allows to load files in folder
+app.use("/images", express.static(path.join(__dirname, "images")));
+
+// for this route => use *dirname*Routes
+app.use("/api/sauces", saucesRoutes);
 app.use("/api/auth", userRoutes);
 
 // [=>] EXPORT App

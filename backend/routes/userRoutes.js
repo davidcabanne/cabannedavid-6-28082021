@@ -10,10 +10,10 @@ const router = express.Router();
 // [3] Middlewares
 // -
 // POST request => signUp
-router.post("/", userCtrl.signup);
+router.post("/signup", userCtrl.signup);
 
 // POST request => logIn
-router.post("/", userCtrl.login);
+router.post("/login", userCtrl.login);
 
 // [=>] EXPORT Router
 // -
