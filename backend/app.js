@@ -1,19 +1,11 @@
 // [1] IMPORT SECT.
 // -
 const express = require("express");
-const mongoose = require("mongoose");
+require("./config/mongodb");
 const saucesRoutes = require("./routes/saucesRoutes");
 const userRoutes = require("./routes/userRoutes");
 // allows to access the file system paths
 const path = require("path");
-
-mongoose
-  .connect(
-    "mongodb+srv://yungdavo:cluster0011@cluster0.xsxcm.mongodb.net/test?retryWrites=true&w=majority",
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
-  .then(() => console.log("Connexion à MongoDB réussie !"))
-  .catch(() => console.log("Connexion à MongoDB échouée !"));
 
 // [2] Create express App
 // -

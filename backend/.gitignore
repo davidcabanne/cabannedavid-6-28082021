@@ -1,4 +1,8 @@
+# Ignore Node Mudles
 /node_modules
+
+# Ignore env variables
+/config/.env
 
 # Ignore OSX System files
 .DS_Store

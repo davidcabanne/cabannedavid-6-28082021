@@ -3,6 +3,8 @@
 const http = require("http");
 // 'express' App
 const app = require("./app");
+// dotEnv variables
+const configMongodb = require("./config/mongodb");
 
 // [2] SERVER SECT.
 // returns a valid PORT as a nbr or a string
@@ -43,7 +45,8 @@ const errorHandler = (error) => {
   }
 };
 
-// creates Server | app = function => receives req & res
+// [3] CREATE Server
+// app = function => receives req & res
 const server = http.createServer(app);
 
 server.on("error", errorHandler);
@@ -53,5 +56,5 @@ server.on("listening", () => {
   console.log("Listening on " + bind);
 });
 
-// listens Server on chosen port
+// [=>] LISTEN Server on chosen port
 server.listen(port);
