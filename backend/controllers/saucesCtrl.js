@@ -1,5 +1,6 @@
 // [1] IMPORT SECT.
 // -
+// mongoose modelSchema
 const Sauce = require("../models/sauce");
 // node package 'file system'
 const fs = require("fs");
@@ -10,9 +11,11 @@ exports.createSauce = (req, res, next) => {
   // stocking data sent from front-end, as form-data, in a variable, parsed as a JS object
   // req.body = string 'sauce' that must be parsed
   const sauceObject = JSON.parse(req.body.sauce);
+
   // remove Id sent from front-end.
   // the sauce's Id is created by MongoDB
   delete sauceObject._id;
+
   // [1] 'new' => create new instance of Sauce model
   // [2] the Spread operator '...' => used to make a new copy of all elements of req.body
   const sauce = new Sauce({
@@ -21,6 +24,7 @@ exports.createSauce = (req, res, next) => {
       req.file.filename
     }`,
   });
+
   // save sauce in data-base
   sauce
     .save()
@@ -48,6 +52,7 @@ exports.updateSauce = (req, res, next) => {
         }`,
       }
     : { ...req.body };
+
   // [1] _id = param Req id
   // [2] new object version = targets param Req sauce / _id = param Req id
   Sauce.updateOne(
@@ -66,7 +71,7 @@ exports.deleteSauce = (req, res, next) => {
       const filename = sauce.imageUrl.split("/images/")[1];
       // delete file thanks to unlink
       fs.unlink(`images/${filename}`, () => {
-        // in callback: once file is deleted, deletes the object from database
+        // in callback: once file is deleted => deletes object from database
         Sauce.deleteOne({ _id: req.params.id })
           .then(() => res.status(200).json({ message: "Objet supprimé !" }))
           .catch((error) => res.status(400).json({ error }));
@@ -77,7 +82,7 @@ exports.deleteSauce = (req, res, next) => {
 
 exports.getOneSauce = (req, res, next) => {
   // mongoose model
-  // targets _id = must be the same as the param Req
+  // targets _id = must be the same as the req param
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => res.status(200).json(sauce))
     .catch((error) => res.status(404).json({ error }));
@@ -87,6 +92,93 @@ exports.getAllSauces = (req, res, next) => {
   Sauce.find()
     .then((sauces) => res.status(200).json(sauces))
     .catch((error) => res.status(400).json({ error }));
+};
+
+exports.manageLike = (req, res, next) => {
+  // grabs user id
+  let userId = req.body.userId;
+  // grabs sauce id
+  let sauceId = req.params.id;
+  // grabs 'like' in request body
+  let like = req.body.like;
+
+  if (like === 1) {
+    // if user smashes the like button
+    // => updates the sauce given its id
+    Sauce.updateOne(
+      { _id: sauceId },
+      {
+        // [ mongoDB push operator ]
+        // pushes userId to usersLiked: [array]
+        $push: { usersLiked: userId },
+        // [ mongoDB increment operator ]
+        // increments likes [array]
+        $inc: { likes: +1 },
+      }
+    )
+      .then(() =>
+        res.status(200).json({ message: "Like ajouté par l'utilisateur !" })
+      )
+      .catch((error) => res.status(400).json({ error }));
+  }
+
+  if (like === -1) {
+    // if user smashes the dislike button
+    // => updates the sauce given its id
+    Sauce.updateOne(
+      { _id: sauceId },
+      {
+        // [ mongoDB push operator ]
+        // pushes userId to usersDisliked: [array]
+        $push: { usersDisliked: userId },
+        // [ mongoDB increment operator ]
+        // increments dislikes [array]
+        $inc: { dislikes: +1 },
+      }
+    )
+      .then(() =>
+        res.status(200).json({ message: "Dislike ajouté par l'utilisateur !" })
+      )
+      .catch((error) => res.status(400).json({ error }));
+  }
+
+  // Remove like / dislike
+  if (like === 0) {
+    Sauce.findOne({
+      _id: sauceId,
+    })
+      .then((sauce) => {
+        // remove like
+        // if user has already liked
+        if (sauce.usersLiked.includes(userId)) {
+          Sauce.updateOne(
+            { _id: sauceId },
+            { $pull: { usersLiked: userId }, $inc: { likes: -1 } }
+          )
+            .then(() =>
+              res
+                .status(200)
+                .json({ message: "Like retiré par l'utilisateur !" })
+            )
+            .catch((error) => res.status(400).json({ error }));
+        }
+        // remove dislike
+        // if user has already disliked
+        if (sauce.usersDisliked.includes(userId)) {
+          Sauce.updateOne(
+            { _id: sauceId },
+            { $pull: { usersDisliked: userId }, $inc: { dislikes: -1 } }
+          )
+            .then(() =>
+              res
+                .status(200)
+                .json({ message: "Dislike retiré par l'utilisateur !" })
+            )
+            .catch((error) => res.status(400).json({ error }));
+        }
+      })
+      .catch((error) => res.status(400).json({ error }));
+  }
 };
 
 /*
