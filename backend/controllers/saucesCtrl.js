@@ -190,4 +190,5 @@ de modifier un champ immuable dans un document de la base de données.
 
 Par conséquent, nous devons utiliser le paramètre id de la
 requête pour configurer notre Thing avec le même_id qu'avant.
-*/
+
+end*/
