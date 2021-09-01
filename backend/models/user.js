@@ -1,7 +1,9 @@
 // [1] IMPORT SECT.
 // -
 const mongoose = require("mongoose");
+const sanitizerPlugin = require("mongoose-sanitizer-plugin");
 const uniqueValidator = require("mongoose-unique-validator");
+const mongooseTypeEmail = require("mongoose-type-email");
 
 // [2] User Schema
 // -
@@ -21,9 +23,15 @@ const userSchema = mongoose.Schema({
   },
 });
 
-// [2] Add validator as a plugin
+// [2] PLUGIN | Validator
 // -
 userSchema.plugin(uniqueValidator);
+
+// [3] PLUGIN | Sanitizer
+// -
+// Sanitizer for Mongoose model, cleans model data before saving in MongoDB
+// Uses HTML Sanitizer from Google Caja in order to purify
+userSchema.plugin(sanitizerPlugin);
 
 // [=>] MODULE EXPORT
 // -

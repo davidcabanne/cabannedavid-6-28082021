@@ -7,6 +7,14 @@ const userRoutes = require("./routes/userRoutes");
 // allows to access the file system paths
 const path = require("path");
 
+// Helmet module_
+// Enhances security, protects app from various vulnerabilities such as :
+// cross-site scripting, sniffing and clickjacking.
+// Full doc => https://helmetjs.github.io/
+const helmet = require("helmet");
+const cookieSession = require("cookie-session");
+const session = require("express-session");
+
 // [2] Create express App
 // -
 const app = express();
@@ -27,8 +35,28 @@ app.use((req, res, next) => {
   next();
 });
 
+// Cookies options
+const expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+app.use(
+  session({
+    name: "session",
+    secret: process.env.SECURE_SESS,
+    cookie: {
+      secure: true,
+      httpOnly: true,
+      domain: "http://localhost:3000",
+      expires: expiryDate,
+    },
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+
 // for parsing application/json
 app.use(express.json());
+
+// Helmet middleware
+app.use(helmet());
 
 // routing manager for 'images' folder
 // middleware allows to load files in folder

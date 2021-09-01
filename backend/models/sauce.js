@@ -1,4 +1,7 @@
+// [1] IMPORT SECT.
+// -
 const mongoose = require("mongoose");
+const sanitizerPlugin = require("mongoose-sanitizer-plugin");
 
 const sauceSchema = mongoose.Schema({
   userId: { type: String, required: true },
@@ -14,4 +17,12 @@ const sauceSchema = mongoose.Schema({
   usersDisliked: { type: [String] },
 });
 
+// [2] PLUGIN | Sanitizer
+// -
+// Sanitizer for Mongoose model, cleans model data before saving in MongoDB
+// Uses HTML Sanitizer from Google Caja in order to purify
+sauceSchema.plugin(sanitizerPlugin);
+
+// [=>] MODULE EXPORT
+// -
 module.exports = mongoose.model("Sauce", sauceSchema);

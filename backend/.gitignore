@@ -4,5 +4,9 @@
 # Ignore env variables
 /config/.env
 
+# Ignore images folder
+/images
+
+
 # Ignore OSX System files
 .DS_Store

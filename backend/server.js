@@ -4,6 +4,7 @@ const http = require("http");
 // 'express' App
 const app = require("./app");
 // dotEnv variables
+const dotEnv = require("dotenv").config({ path: "./config/.env" });
 const configMongodb = require("./config/mongodb");
 
 // [2] SERVER SECT.
@@ -20,7 +21,7 @@ const normalizePort = (val) => {
   return false;
 };
 // env variable | setting up default port
-const port = normalizePort(process.env.PORT || "3000");
+const port = normalizePort(process.env.PORT);
 // tells express which port to set
 app.set("port", port);
 
