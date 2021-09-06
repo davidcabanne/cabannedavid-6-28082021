@@ -23,13 +23,26 @@ exports.createSauce = (req, res, next) => {
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
     }`,
+    likes: 0,
+    dislikes: 0,
+    usersLiked: [],
+    usersDisliked: [],
   });
 
-  // save sauce in data-base
-  sauce
-    .save()
-    .then(() => res.status(201).json({ message: "Objet enregistré !" }))
-    .catch((error) => res.status(400).json({ error }));
+  const validatedModel = sauce.validateSync();
+  console.log(validatedModel);
+
+  if (!!validatedModel) {
+    res
+      .status(400)
+      .json({ message: "Le champ n'a pas été rempli correctement !" });
+  } else {
+    // save sauce in data-base
+    sauce
+      .save()
+      .then(() => res.status(201).json({ message: "Objet enregistré !" }))
+      .catch((error) => res.status(400).json({ error }));
+  }
 };
 
 exports.updateSauce = (req, res, next) => {
