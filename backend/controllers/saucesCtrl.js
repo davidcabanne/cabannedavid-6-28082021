@@ -3,6 +3,7 @@
 // mongoose modelSchema
 const Sauce = require("../models/sauce");
 // node package 'file system'
+// https://practicalprogramming.fr/how-to-use-node-fs
 const fs = require("fs");
 
 // [2] middleWares Functions
@@ -17,9 +18,13 @@ exports.createSauce = (req, res, next) => {
   delete sauceObject._id;
 
   // [1] 'new' => create new instance of Sauce model
-  // [2] the Spread operator '...' => used to make a new copy of all elements of req.body
+  // [2] the Spread operator '...' => creates a new copy of all elements of req.body
+  // https://geeklecode.com/loperateur-spread-en-javascript-va-vous-simplifier-la-vie/
   const sauce = new Sauce({
     ...sauceObject,
+    // (a) ${req.protocol} = http or https
+    // (b) ${req.get("host")} = target host server
+    // (c) ${req.file.filename} = filename
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
     }`,
@@ -29,8 +34,8 @@ exports.createSauce = (req, res, next) => {
     usersDisliked: [],
   });
 
+  // Express Validator = validate model from inputs
   const validatedModel = sauce.validateSync();
-  console.log(validatedModel);
 
   if (!!validatedModel) {
     res
@@ -48,24 +53,31 @@ exports.createSauce = (req, res, next) => {
 exports.updateSauce = (req, res, next) => {
   // Updates existing sauce [*]
 
-  // delete old img from database if user uploads a new one
-  Sauce.findOne({ _id: req.params.id }).then((sauce) => {
-    const filename = sauce.imageUrl.split("/images/")[1];
-    fs.unlink(`images/${filename}`, () => {
-      console.log("supprimé ok !");
-    });
-  });
+  // // delete old img from database if user uploads a new one
+  // Sauce.findOne({ _id: req.params.id }).then((sauce) => {
+  //   const filename = sauce.imageUrl.split("/images/")[1];
+  //   fs.unlink(`images/${filename}`, () => {
+  //     console.log("old picture deleted !");
+  //   });
+  // });
 
-  // Ternary Operator = like if() {} else {} => condition checks ? if TRUE : if FALSE
+  // if update has to process a new image
+  // Ternary Operator | if req.file exists ?
+  // => like if() {} else {} => condition checks ? if TRUE : if FALSE
   const sauceObject = req.file
     ? {
+        // if exists =>
+        // (a) targets all infos from req object
         ...JSON.parse(req.body.sauce),
+        // (b) generates new img
         imageUrl: `${req.protocol}://${req.get("host")}/images/${
           req.file.filename
         }`,
       }
-    : { ...req.body };
+    : // if doesn't exist => simply copy req.body
+      { ...req.body };
 
+  // [=>] UPDATE / save object
   // [1] _id = param Req id
   // [2] new object version = targets param Req sauce / _id = param Req id
   Sauce.updateOne(

@@ -21,7 +21,7 @@ const app = express();
 
 // [3] Middlewares
 // -
-// CORS midWare general | default options // allows app to acess to API
+// CORS midWare general | default options // allows app to access to API
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -52,14 +52,14 @@ app.use(
   })
 );
 
-// for parsing application/json
+// for parsing body application/json
 app.use(express.json());
 
 // Helmet middleware
 app.use(helmet());
 
 // routing manager for 'images' folder
-// middleware allows to load files in folder
+// middleware allows to download files in static folder
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 // for this route => use *dirname*Routes

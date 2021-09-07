@@ -1,5 +1,7 @@
 // [1] IMPORT SECT.
 // -
+// Mongoose is a MongoDB object modeling tool designed to work in an asynchronous environment.
+// Mongoose supports both promises and callbacks
 const mongoose = require("mongoose");
 const sanitizerPlugin = require("mongoose-sanitizer-plugin");
 const uniqueValidator = require("mongoose-unique-validator");

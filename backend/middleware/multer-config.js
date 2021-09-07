@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
     // [a] remove space / replace by '_'
     const name = file.originalname.split(" ").join("_");
     // [b] use mime_types to generate file extension
-    // element from dictionnary = mime type sent from front-end
+    // element from dictionnary = matches mime type sent from front-end
     const extension = MIME_TYPES[file.mimetype];
     callback(null, name + Date.now() + "." + extension);
   },
@@ -30,5 +30,5 @@ const storage = multer.diskStorage({
 
 // [=>] EXPORT multer
 // -
-// multer => single image file
+// multer method => store single image file
 module.exports = multer({ storage: storage }).single("image");

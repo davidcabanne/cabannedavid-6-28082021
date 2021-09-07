@@ -38,9 +38,21 @@ exports.login = (req, res, next) => {
           }
           res.status(200).json({
             userId: user._id,
-            token: jwt.sign({ userId: user._id }, process.env.SECRET_TOKEN, {
-              expiresIn: "24h",
-            }),
+            // jsonWebToken => function "sign", takes 3 args
+            // token will hold encoded userId => create new signed objects and auth
+            // if user[1] uploads a new sauce, it prevents user[2] to modify it
+            token: jwt.sign(
+              {
+                // [1] arg = > userId matches
+                userId: user._id,
+              },
+              // [2] arg => secret token
+              process.env.SECRET_TOKEN,
+              {
+                // [3] arg => token duration
+                expiresIn: "24h",
+              }
+            ),
           });
         })
         .catch((error) => res.status(500).json({ error }));

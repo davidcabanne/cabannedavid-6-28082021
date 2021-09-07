@@ -11,6 +11,9 @@ const router = express.Router();
 
 // [3] Middlewares
 // -
+// auth middleware always comes first
+// prevents any request to be processed without authentification
+
 // POST request
 router.post("/", auth, multer, saucesCtrl.createSauce);
 
