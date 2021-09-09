@@ -1,6 +1,7 @@
 // [1] IMPORT SECT.
 // -
 const express = require("express");
+// mongoDB IMPORT !
 require("./config/mongodb");
 const saucesRoutes = require("./routes/saucesRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -15,7 +16,7 @@ const helmet = require("helmet");
 const cookieSession = require("cookie-session");
 const session = require("express-session");
 
-// [2] Create express App
+// [2] Create & Execute express App
 // -
 const app = express();
 

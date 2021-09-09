@@ -25,6 +25,7 @@ const port = normalizePort(process.env.PORT);
 // tells express which port to set
 app.set("port", port);
 
+// [3] ERROR SECT.
 const errorHandler = (error) => {
   if (error.syscall !== "listen") {
     throw error;
@@ -46,7 +47,7 @@ const errorHandler = (error) => {
   }
 };
 
-// [3] CREATE Server
+// [4] CREATE Server
 // app = function => receives req & res
 const server = http.createServer(app);
 
