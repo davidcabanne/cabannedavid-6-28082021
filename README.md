@@ -56,3 +56,20 @@ Si besoin, le Frontend est disponible séparément sur [github](https://github.c
 
 - `npm install -g nodemon` => charger le package nodemon.
 - `nodemon server` => lancer le server.
+
+---
+
+### Technologies et outils utilisés dans ce projet
+
+- JavaScript
+- Framework: Express
+- NodeJS
+- npm
+- MongoDB
+- Mongoose
+- Git
+- GitHub
+- VsCode
+
+Hébergement sur MongoDB Atlas.
+Toutes les opérations de la base de données utilisent le pack Mongoose avec des schémas de données stricts.
